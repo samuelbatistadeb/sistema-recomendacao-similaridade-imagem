@@ -78,6 +78,28 @@ df_sampled = df.sample(n=sample_size, random_state=42)
 base_model = MobileNetV2(weights='imagenet', include_top=False)
 base_model.trainable = False  # Congelar as camadas convolucionais
 
+from google.colab import files
+
+# Função para fazer upload e processar a imagem no Colab
+def upload_image_colab():
+    uploaded = files.upload()  # O Colab permite fazer o upload de arquivos
+
+    # Vamos pegar o primeiro arquivo carregado
+    for fn in uploaded.keys():
+        file_path = fn  # O nome do arquivo carregado
+        print(f"Arquivo carregado: {file_path}")
+
+        # Encontrar imagens similares à imagem carregada
+        similar_images = find_similar_images(file_path, all_features, image_urls_sampled, top_k=4)
+
+        # Exibir as imagens similares
+        print("As 4 imagens mais similares são:")
+        for img in similar_images:
+            print(img)
+
+# Chame a função para o upload da imagem
+upload_image_colab()
+
 # Função para extrair características de uma imagem
 def extract_features_from_input_image(image_path):
     img = load_img(image_path, target_size=(224, 224))  # Tamanho de entrada do MobileNetV2
